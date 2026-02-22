@@ -229,8 +229,9 @@ function App() {
   };
 
   return (
-    <div className={darkMode ? "dark app" : "app"}>
-      <div id="dashboard-content">
+  <div className={darkMode ? "dark app" : "app"}>
+    <div className="dashboard-wrapper">
+      <div id="dashboard-content"></div>
         <div className="dashboard-header">
           <div>
             <h1>ElderVoice Guardian</h1>
