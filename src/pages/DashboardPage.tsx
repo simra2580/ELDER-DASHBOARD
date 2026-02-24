@@ -59,6 +59,10 @@ export default function DashboardPage({
       Toggle Theme
     </Button>
 
+    <Button variant="outlined" onClick={exportReport}>
+  Export Report
+</Button>
+
     <Button variant="contained" color="error" onClick={generateAlert}>
       Generate Alert
     </Button>
