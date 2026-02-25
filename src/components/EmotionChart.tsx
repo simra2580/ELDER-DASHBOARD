@@ -6,43 +6,109 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const COLORS = ["#4caf50", "#2196f3", "#ff9800", "#f44336"];
+export default function EmotionChart({
+  riskScore,
+}: {
+  riskScore: number;
+}) {
 
-export default function EmotionChart() {
-  const data = [
-    { name: "Happy", value: 40 },
-    { name: "Neutral", value: 30 },
-    { name: "Sad", value: 20 },
-    { name: "Stress", value: 10 },
-  ];
+  // 🔥 First define moodData
+  let moodData;
 
-  return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" mb={2}>
-        Voice Emotion Analysis
-      </Typography>
+  if (riskScore < 30) {
+    moodData = [
+      { name: "Happy", value: 60, color: "#4caf50" },
+      { name: "Neutral", value: 25, color: "#2196f3" },
+      { name: "Sad", value: 10, color: "#ff9800" },
+      { name: "Stress", value: 5, color: "#f44336" },
+    ];
+  } else if (riskScore < 60) {
+    moodData = [
+      { name: "Happy", value: 30, color: "#4caf50" },
+      { name: "Neutral", value: 40, color: "#2196f3" },
+      { name: "Sad", value: 20, color: "#ff9800" },
+      { name: "Stress", value: 10, color: "#f44336" },
+    ];
+  } else {
+    moodData = [
+      { name: "Happy", value: 10, color: "#4caf50" },
+      { name: "Neutral", value: 20, color: "#2196f3" },
+      { name: "Sad", value: 30, color: "#ff9800" },
+      { name: "Stress", value: 40, color: "#f44336" },
+    ];
+  }
 
-       <Box sx={{ width: "100%" }}>
-  <ResponsiveContainer width="100%" height={260}>
-          <PieChart>
-            <Pie
-              data={data}
-              innerRadius={70}
-              outerRadius={100}
-              paddingAngle={5}
-              dataKey="value"
-            >
-              {data.map((_, index) => (
-                <Cell key={index} fill={COLORS[index]} />
-              ))}
-            </Pie>
-          </PieChart>
-        </ResponsiveContainer>
-      </Box>
+  // 🔥 Now calculate AFTER moodData exists
+  const total = moodData.reduce((sum, item) => sum + item.value, 0);
 
-      <Typography textAlign="center" variant="h6" mt={2}>
-        Mood Status: Stable
-      </Typography>
-    </Paper>
+  const highest = moodData.reduce((prev, current) =>
+    prev.value > current.value ? prev : current
   );
+
+ return (
+  <Paper
+    sx={{
+      p: 2,
+      borderRadius: 3,
+      boxShadow: 2,
+    }}
+  >
+    <Typography
+      variant="subtitle2"
+      fontWeight={600}
+      sx={{ mb: 1 }}
+    >
+      Voice Emotion Analysis
+    </Typography>
+
+    <Box
+  sx={{
+    width: "100%",
+    minheight: 200,   // 🔥 give FIXED HEIGHT
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+  }}
+>
+      <ResponsiveContainer width="100%" height={200}>
+        <PieChart>
+          <Pie
+            data={moodData}
+            dataKey="value"
+            innerRadius={50}
+            outerRadius={75}
+            paddingAngle={3}
+            cornerRadius={8}
+          >
+            {moodData.map((entry, index) => (
+              <Cell key={index} fill={entry.color} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+
+      {/* Center Content */}
+      <Box
+    position="absolute"
+    top="50%"
+    left="50%"
+    sx={{ transform: "translate(-50%, -50%)" }}
+    textAlign="center"
+  >
+    <Typography variant="body2" color="text.secondary">
+      Mood
+    </Typography>
+
+    <Typography fontWeight={700}>
+      {highest.name}
+    </Typography>
+
+    <Typography variant="caption" color="text.secondary">
+      {Math.round((highest.value / total) * 100)}%
+    </Typography>
+  </Box>
+</Box>
+  </Paper>
+);
 }

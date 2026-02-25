@@ -4,6 +4,7 @@ import HealthMonitor from "../components/HealthMonitor";
 import EmotionChart from "../components/EmotionChart";
 import PatientProfile from "../components/PatientProfile";
 import type { Alert } from "../data/mockEngine";
+import { LinearProgress } from "@mui/material";
 
 type Props = {
   alerts: Alert[];
@@ -48,87 +49,166 @@ export default function DashboardPage({
   vitals,
 }: Props) {
   return (
-    <Box>
-        <Box display="flex" justifyContent="space-between" mb={3}>
-  <Typography variant="h5">
-    Elder Voice Guardian Dashboard
-  </Typography>
+    
+  <Box sx={{ p: 2, width: "100%", overflowX: "hidden" }}>
 
-  <Box display="flex" gap={2}>
-    <Button variant="outlined" onClick={toggleTheme}>
-      Toggle Theme
-    </Button>
+  {/* HEADER */}
+  <Box
+    display="flex"
+    justifyContent="space-between"
+    alignItems="center"
+    mb={2}
+  >
+    <Typography
+      variant="h4"
+      fontWeight={700}
+      sx={{
+        background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+        WebkitBackgroundClip: "text",
+        WebkitTextFillColor: "transparent",
+      }}
+    >
+      Elder Voice Guardian
+    </Typography>
 
-    <Button variant="outlined" onClick={exportReport}>
-  Export Report
-</Button>
-
-    <Button variant="contained" color="error" onClick={generateAlert}>
-      Generate Alert
-    </Button>
-
-    <Button color="error" onClick={clearPatient}>
-      Reset Patient
+    <Button variant="contained" onClick={exportReport}>
+      Download Report
     </Button>
   </Box>
-</Box>
-<Box mb={3}>
-<Paper sx={{ p: 3, mb: 3}}>
-<Typography
-  variant="h4"
-  color={
-    riskScore > 70
-      ? "error.main"
-      : riskScore > 40
-      ? "warning.main"
-      : "success.main"
-  }
+
+  {/* ACTION BUTTONS */}
+  <Box
+  sx={{
+    display: "flex",
+    gap: 1,
+    flexDirection: { xs: "column", sm: "row" },
+    mb: 2,
+  }}
 >
-  Risk Level: {riskScore}%
-</Typography>
-</Paper>
-</Box>
+  <Button
+    variant="outlined"
+    size="medium"
+    onClick={toggleTheme}
+    sx={{ borderRadius: 2 }}
+  >
+    Toggle Theme
+  </Button>
+
+   <Button
+    fullWidth
+    variant="contained"
+    color="error"
+    size="medium"
+    sx={{
+      borderRadius: 3,
+      fontSize: "0.85rem",
+      py: 1,
+    }}
+    onClick={generateAlert}
+  >
+    GENERATE ALERT
+  </Button>
+
+  <Button
+    variant="outlined"
+    color="error"
+    /*size="large"*/
+    onClick={clearPatient}
+    sx={{ borderRadius: 2 }}
+  >
+    Reset Patient
+  </Button>
+ </Box>
+
+  {/* RISK SECTION */}
+  <Box mb={2}>
+    <Paper sx={{ p: 2 }}>
+      <Typography variant="h6" fontWeight={600} mb={2}>
+        Patient Risk Assessment
+      </Typography>
+
+      <LinearProgress
+        variant="determinate"
+        value={riskScore}
+        sx={{
+          height: 12,
+          borderRadius: 5,
+          mb: 2,
+          backgroundColor: "#eee",
+          "& .MuiLinearProgress-bar": {
+            backgroundColor:
+              riskScore > 70
+                ? "#d32f2f"
+                : riskScore > 40
+                ? "#ed6c02"
+                : "#2e7d32",
+          },
+        }}
+      />
+
+      <Typography
+        variant="h6"
+        fontWeight={700}
+        color={
+          riskScore > 70
+            ? "error.main"
+            : riskScore > 40
+            ? "warning.main"
+            : "success.main"
+        }
+      >
+        {riskScore}% Risk Level
+      </Typography>
+    </Paper>
+  </Box>
+
 
       {/* 🔹 Top Stats */}
       <TopStats alerts={alerts} riskScore={riskScore} />
 
-      {/* 🔹 Main Grid */}
       <Grid container spacing={3} mt={1}>
 
-        {/* LEFT COLUMN */}
-        <Grid size={{ xs: 12, md: 6 }}>
+  {/* LEFT SIDE */}
+  <Grid size={{ xs: 12, md: 7 }}>
+    <HealthMonitor vitals={vitals} />
+  </Grid>
 
-          {/* Health Monitor */}
-          <Paper sx={{ p: 3, mb: 3 }}>
-  <Typography variant="h6">Current Vitals</Typography>
-  <Typography>Heart Rate: {vitals.heartRate} bpm</Typography>
-  <Typography>Blood Pressure: {vitals.systolic} mmHg</Typography>
-  <Typography>Oxygen: {vitals.oxygen}%</Typography>
-</Paper>
-          <HealthMonitor vitals={vitals} />
+  {/* RIGHT SIDE */}
+  <Grid size={{ xs: 12, md: 5 }}>
+    <EmotionChart riskScore={riskScore} />
+  </Grid>
 
-          <Box mt={3}>
-            <EmotionChart />
-          </Box>
+</Grid>
 
-          {/* Alerts Section */}
       {/* Alerts Section */}
-<Box mt={3}>
+<Box mt={2}>
   <Paper sx={{ p: 3 }}>
     <Typography variant="h6" mb={2}>
       Live Alerts
     </Typography>
 
-    <Box mb={2}>
+    <Box
+  sx={{
+    display: "flex",
+    gap: 1,
+    flexDirection: { xs: "column", sm: "row" },
+    mb: 2,
+  }}
+>
       <Button
-        variant="contained"
-        color="warning"
-        onClick={simulateEmergency}
-        sx={{ mr: 2 }}
-      >
-        Simulate Emergency
-      </Button>
-
+    fullWidth
+    variant="contained"
+    color="warning"
+    size="medium"
+    sx={{
+      borderRadius: 3,
+      fontSize: "0.85rem",
+      py: 1,
+    }}
+    onClick={simulateEmergency}
+  >
+    SIMULATE EMERGENCY
+  </Button>
       <Button
         variant="contained"
         color="error"
@@ -218,7 +298,7 @@ export default function DashboardPage({
     )}
   </Paper>
 </Box>
-        </Grid>
+
 
         {/* RIGHT COLUMN */}
         <Grid size={{ xs: 12, md: 6 }}>
@@ -229,8 +309,6 @@ export default function DashboardPage({
             caregiver={patient.caregiver}
           />
         </Grid>
-
-      </Grid>
-    </Box>
+      </Box>
   );
 }

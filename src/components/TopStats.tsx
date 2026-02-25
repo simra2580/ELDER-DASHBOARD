@@ -14,7 +14,7 @@ export default function TopStats({ alerts, riskScore }: Props) {
     <Grid container spacing={3}>
       {/* Health Score */}
       <Grid size={{ xs: 12, md: 3 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="body2" color="text.secondary">
             Health Score
           </Typography>
@@ -26,7 +26,7 @@ export default function TopStats({ alerts, riskScore }: Props) {
 
       {/* Medications */}
       <Grid size={{ xs: 12, md: 3 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="body2" color="text.secondary">
             Medications Today
           </Typography>
@@ -38,7 +38,7 @@ export default function TopStats({ alerts, riskScore }: Props) {
 
       {/* Voice Check-ins */}
       <Grid size={{ xs: 12, md: 3 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="body2" color="text.secondary">
             Voice Check-ins
           </Typography>
@@ -50,7 +50,7 @@ export default function TopStats({ alerts, riskScore }: Props) {
 
       {/* Emergency Alerts */}
       <Grid size={{ xs: 12, md: 3 }}>
-        <Paper sx={{ p: 3 }}>
+        <Paper sx={{ p: 2 }}>
           <Typography variant="body2" color="text.secondary">
             Emergency Alerts
           </Typography>

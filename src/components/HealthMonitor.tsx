@@ -48,25 +48,50 @@ export default function HealthMonitor({ vitals }: Props) {
   }, [vitals]);
 
   return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h6" mb={2}>
+    <Paper sx={{ p: 2, borderRadius: 3 }}>
+      <Typography variant="subtitle1" fontWeight={600} mb={1}>
         Health Monitoring
       </Typography>
 
-      <Box sx={{ width: "100%" }}>
-        <ResponsiveContainer width="100%" height={300}>
-          <ComposedChart data={history}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="time" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="oxygen" />
-            <Line type="monotone" dataKey="heartRate" />
-            <Line type="monotone" dataKey="bloodPressure" />
-          </ComposedChart>
-        </ResponsiveContainer>
-      </Box>
+    <Box
+  sx={{
+    width: "100%",
+    minHeight: 260,   // 🔥 IMPORTANT (minHeight works better than height)
+  }}
+>
+  <ResponsiveContainer width="100%" height={200}>
+    <ComposedChart data={history}>
+      <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+      <XAxis dataKey="time" stroke="#9e9e9e" />
+      <YAxis yAxisId="left" stroke="#9e9e9e" />
+<YAxis yAxisId="right" orientation="right" stroke="#9e9e9e" />
+      <Tooltip />
+      <Legend />
+    <Bar
+  yAxisId="right"
+  dataKey="oxygen"
+  fill="#90caf9"
+  radius={[6, 6, 0, 0]}
+/>
+
+<Line
+  yAxisId="left"
+  type="monotone"
+  dataKey="heartRate"
+  stroke="#2e7d32"
+  strokeWidth={2}
+/>
+
+<Line
+  yAxisId="left"
+  type="monotone"
+  dataKey="bloodPressure"
+  stroke="#1565c0"
+  strokeWidth={2}
+/>
+    </ComposedChart>
+  </ResponsiveContainer>
+</Box>
     </Paper>
   );
 }

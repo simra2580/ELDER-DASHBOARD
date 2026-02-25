@@ -8,6 +8,7 @@ import {
   calculateRisk,
 } from "./data/mockEngine";
 import type { Vitals, Alert } from "./data/mockEngine";
+import jsPDF from "jspdf";
 
 type Patient = {
   name: string;
@@ -196,25 +197,101 @@ const updateStatus = (
      EXPORT FUNCTION
   =============================== */
 
-  const exportReport = () => {
-    const data = JSON.stringify(
-      { patient, vitals, alerts, riskScore },
-      null,
-      2
-    );
+ const exportReport = () => {
+  if (!patient) {
+    alert("No patient selected");
+    return;
+  }
 
-    const blob = new Blob([data], {
-      type: "application/json",
+  const doc = new jsPDF();
+  /* ================= HEADER ================= */
+
+  doc.setFillColor(25, 118, 210); // Blue header
+  doc.rect(0, 0, 210, 25, "F");
+
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
+  doc.text("Elder Voice Guardian", 20, 15);
+
+  doc.setFontSize(10);
+  doc.text("AI-Based Health Monitoring Report", 20, 21);
+
+  doc.setTextColor(0, 0, 0);
+
+  /* ================= PATIENT INFO ================= */
+
+  doc.setFontSize(12);
+  doc.text("Patient Information", 20, 40);
+  doc.rect(20, 45, 170, 30);
+
+  doc.text(`Name: ${patient.name}`, 25, 55);
+  doc.text(`Age: ${patient.age}`, 25, 62);
+  doc.text(`Condition: ${patient.condition}`, 25, 69);
+  doc.text(`Caregiver: ${patient.caregiver}`, 110, 55);
+
+  /* ================= RISK SECTION ================= */
+
+  let riskColor: [number, number, number];
+
+  if (riskScore > 70) riskColor = [211, 47, 47]; // Red
+  else if (riskScore > 40) riskColor = [237, 108, 2]; // Orange
+  else riskColor = [46, 125, 50]; // Green
+
+  doc.setFontSize(14);
+  doc.text("Risk Assessment", 20, 90);
+
+  doc.setFillColor(...riskColor);
+  doc.rect(20, 95, 170 * (riskScore / 100), 8, "F");
+
+  doc.setFontSize(12);
+  doc.text(`Risk Score: ${riskScore}%`, 20, 110);
+
+  /* ================= VITALS ================= */
+
+  doc.setFontSize(14);
+  doc.text("Latest Vitals", 20, 125);
+
+  doc.rect(20, 130, 170, 25);
+
+  doc.setFontSize(12);
+  doc.text(`Heart Rate: ${vitals.heartRate} bpm`, 25, 140);
+  doc.text(`Blood Pressure: ${vitals.systolic} mmHg`, 25, 147);
+  doc.text(`Oxygen Level: ${vitals.oxygen}%`, 110, 140);
+
+  /* ================= ALERTS ================= */
+
+  doc.setFontSize(14);
+  doc.text("Alerts Summary", 20, 170);
+
+  if (alerts.length === 0) {
+    doc.setFontSize(12);
+    doc.text("No active alerts.", 25, 180);
+  } else {
+    alerts.slice(0, 5).forEach((alert, index) => {
+      doc.text(
+        `${index + 1}. ${alert.title} - ${alert.status}`,
+        25,
+        180 + index * 7
+      );
     });
+  }
 
-    const url = URL.createObjectURL(blob);
+  /* ================= FOOTER ================= */
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "elder-report.json";
-    a.click();
-  };
+  doc.setDrawColor(200);
+  doc.line(20, 260, 190, 260);
 
+  doc.setFontSize(10);
+  doc.text(
+    `Generated on: ${new Date().toLocaleString()}`,
+    20,
+    268
+  );
+
+  doc.text("Authorized Signature: ____________________", 120, 280);
+
+  doc.save("elder-health-report.pdf");
+ };
 
   /* ===============================
      ROUTING LOGIC
