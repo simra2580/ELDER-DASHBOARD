@@ -312,17 +312,10 @@ doc.setGState(doc.GState({ opacity: 1 }));
     doc.text("Authorized Signature: ____________________", 120, 280);
 
     // ✅ SAVE ONLY HERE
-    const pdfBlob = doc.output("blob");
+   const pdfBlob = doc.output("blob");
 const pdfUrl = URL.createObjectURL(pdfBlob);
 
-if (/Android|iPhone|iPad/i.test(navigator.userAgent)) {
-  window.open(pdfUrl, "_blank");
-} else {
-  const link = document.createElement("a");
-  link.href = pdfUrl;
-  link.download = "elder-health-report.pdf";
-  link.click();
-}
+window.open(pdfUrl, "_blank");
   };
 };
 
